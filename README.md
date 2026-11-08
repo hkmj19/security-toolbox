@@ -36,42 +36,17 @@ There are no accounts, ads, analytics, external fonts, or third-party JavaScript
 
 Use a current browser with JavaScript enabled. Open `index.html` directly, or copy any individual tool `.html` file elsewhere and open it. Its styling and logic travel with the file.
 
-To use a localhost preview instead, run this optional command with Node.js 20 or later:
-
-```sh
-node scripts/preview.mjs
-```
-
-Open **http://127.0.0.1:4173/**. Stop the server with `Ctrl+C`.
-
 File hashing uses Web Crypto. It works in current Chrome when opening a local HTML file; if another browser blocks it, use HTTPS or localhost. Clipboard buttons may require browser permission; the output can always be copied manually.
 
-## Checks
+## Validation
 
-```sh
-node --test
-node scripts/check-site.mjs
-```
+During development, the tools passed 18 logic and form-handler tests, 12 browser checks, and direct-file checks for all 11 HTML pages. Mobile checks covered a 320px viewport. Direct-file checks used copies of the HTML files in a folder without supporting assets.
 
-The tests cover hash-format ambiguity, IPv4 edge cases, text conversion, JSON parsing, JWT decoding, file digest vectors, timestamp validation, and form interactions. The site check verifies local links, embedded resources, and common page structure.
+Telegram API responses were mocked during these checks; this does not verify a live bot token or guarantee external-service availability. Development test scripts are not included in this standalone distribution.
 
-For real browser checks on Windows with Chrome installed, start the preview server and run:
+## Editing the files
 
-```sh
-node scripts/browser-check.mjs
-```
-
-This uses a separate temporary browser profile. It tests all tools, checks layouts at 320px, copies just the HTML files into a temporary folder without assets, and tests form actions from `file://` URLs. Telegram API responses are mocked; no real bot credentials are used. Reports and desktop/mobile screenshots go into the ignored `artifacts/` folder.
-
-## Editing the source
-
-The `.html` files are the ready-to-use deliverables. Shared source files are retained in `assets/` for maintenance. After changing those source files, update the standalone HTML files with:
-
-```sh
-node scripts/build-site.mjs
-```
-
-This uses only Node.js built-ins and embeds the final CSS and classic JavaScript directly in each page. Source modules are never loaded by the delivered pages.
+Each HTML page contains its own `<style>` and `<script>` sections. Edit these directly to change the appearance or behavior. Shared design changes need to be applied to the relevant pages. There is no required build step or separate asset dependency.
 
 ## Input handling and limits
 
@@ -86,18 +61,19 @@ This uses only Node.js built-ins and embeds the final CSS and classic JavaScript
 ## Repository layout
 
 ```text
-index.html                 Searchable tools directory
-*.html                     Individual tool pages
-assets/site.css            Shared responsive theme source
-assets/logic.mjs            Hash-format and IPv4 calculations
-assets/utilities.mjs        Encoding, JSON, JWT, digest, and time logic
-assets/*-ui.mjs             Tool form handler source
-assets/directory.mjs        Homepage search and category filter
-assets/dorksec.js           External research shortcuts
-assets/homoglyph*.mjs       Unicode alternatives and controls
-scripts/                   Standalone builder, preview server, and site checks
-tests/                     Node.js test suite
-CNAME                      Custom domain for GitHub Pages
+index.html                  Searchable tools directory
+hashAnalyzer.html           Hash format inspector
+fileChecksum.html           File hashing and checksum comparison
+ipv4SubnetCalculator.html   IPv4 network calculations
+textEncoder.html            Base64, Base64url, and URL encoding
+jsonFormatter.html          JSON validation and formatting
+jwtInspector.html           JWT decoding without signature verification
+timestampConverter.html     Unix and ISO timestamp conversion
+homoglyph.html              Unicode lookalike exploration
+dorksec.html                External domain-research shortcuts
+telegramBotApiChecker.html  Telegram getMe token check
+README.md                   Tool descriptions and usage
+CNAME                       Custom domain for GitHub Pages
 ```
 
 The site is static and keeps its existing GitHub Pages routes and custom domain. Deploy the repository root through GitHub Pages; no generated `dist` folder is needed.
